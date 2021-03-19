@@ -19,9 +19,9 @@ func Md5(str string) string {
 	if str == "" {
 		return ""
 	}
-	init := md5.New()
-	init.Write([]byte(str))
-	return fmt.Sprintf("%x", init.Sum(nil))
+	hash := md5.New()
+	hash.Write([]byte(str))
+	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
 func Sha256(s string) string {

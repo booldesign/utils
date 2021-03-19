@@ -2,7 +2,9 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 )
 
 /**
@@ -25,4 +27,20 @@ func ValidatePassword(userPassword string, hashed string) (isOk bool, err error)
 		return false, errors.New("密码比对错误")
 	}
 	return true, nil
+}
+
+//密码加密(新)
+func GeneratePasswordNew(password, salt string) string {
+	suffix := RandNumString(6)
+	hash := Md5(salt + password + suffix)
+	return fmt.Sprintf("%s_%s", hash, suffix)
+}
+
+// 验证密码(新)
+func ValidatePasswordNew(password, hashed, salt string) bool {
+	passwords := strings.Split(hashed, "_")
+	if len(passwords) != 2 {
+		return false
+	}
+	return Md5(salt+password+passwords[1]) == passwords[0]
 }
