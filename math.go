@@ -19,6 +19,9 @@ func RandomRangeInt(min, max int) int {
 	if min > max {
 		max, min = min, max
 	}
+	if min == max {
+		return max
+	}
 	rand.Seed(time.Now().Unix())
 	return rand.Intn(max-min) + min
 
