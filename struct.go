@@ -12,3 +12,8 @@ func EmptyStruct() struct{} {
 	return struct {
 	}{}
 }
+
+func EmptySliceStruct() []struct{} {
+	return []struct {
+	}{}
+}
