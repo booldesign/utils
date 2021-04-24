@@ -1,4 +1,4 @@
-package tarce
+package trace
 
 import (
 	"bytes"
