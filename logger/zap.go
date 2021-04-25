@@ -21,6 +21,7 @@ type Option func(*option)
 type option struct {
 	level   zapcore.Level
 	logPath string
+	fields          map[string]string
 }
 
 // WithDebugLevel only greater than 'level' will output
@@ -57,6 +58,13 @@ func WithLogPath(path string) Option {
 	}
 }
 
+// WithField add field(s) to log
+func WithField(key, value string) Option {
+	return func(opt *option) {
+		opt.fields[key] = value
+	}
+}
+
 // 初始化 logger
 func NewJSONLogger(opts ...Option) *zap.SugaredLogger {
 	opt := &option{level: zapcore.InfoLevel, logPath: DefaultLogPath}
@@ -71,13 +79,16 @@ func NewJSONLogger(opts ...Option) *zap.SugaredLogger {
 		zap.NewAtomicLevelAt(opt.level),
 	)
 
-	log := zap.New(
+	logger := zap.New(
 		core,
 		zap.AddCaller(), // 将调用函数信息记录到日志中
 		zap.AddCallerSkip(1),
 	)
+	for key, value := range opt.fields {
+		logger = logger.WithOptions(zap.Fields(zapcore.Field{Key: key, Type: zapcore.StringType, String: value}))
+	}
 
-	return log.Sugar()
+	return logger.Sugar()
 }
 
 // WriterSyncer ：指定日志将写到哪里去, zap中加入Lumberjack支持
@@ -103,7 +114,6 @@ func getEncoder() zapcore.EncoderConfig {
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	//Level序列化为全大写字符串
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
-	encoderConfig.LineEnding = zapcore.DefaultLineEnding
 
 	return encoderConfig
 }
