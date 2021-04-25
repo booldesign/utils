@@ -21,7 +21,7 @@ type Option func(*option)
 type option struct {
 	level   zapcore.Level
 	logPath string
-	fields          map[string]string
+	fields  map[string]string
 }
 
 // WithDebugLevel only greater than 'level' will output
@@ -67,7 +67,11 @@ func WithField(key, value string) Option {
 
 // 初始化 logger
 func NewJSONLogger(opts ...Option) *zap.SugaredLogger {
-	opt := &option{level: zapcore.InfoLevel, logPath: DefaultLogPath}
+	opt := &option{
+		level:   zapcore.InfoLevel,
+		logPath: DefaultLogPath,
+		fields:  make(map[string]string),
+	}
 	for _, f := range opts {
 		f(opt)
 	}
@@ -85,7 +89,11 @@ func NewJSONLogger(opts ...Option) *zap.SugaredLogger {
 		zap.AddCallerSkip(1),
 	)
 	for key, value := range opt.fields {
-		logger = logger.WithOptions(zap.Fields(zapcore.Field{Key: key, Type: zapcore.StringType, String: value}))
+		logger = logger.WithOptions(
+			zap.Fields(
+				zapcore.Field{Key: key, Type: zapcore.StringType, String: value},
+			),
+		)
 	}
 
 	return logger.Sugar()
