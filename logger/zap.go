@@ -116,12 +116,18 @@ func getLogWriter(logPath string) zapcore.WriteSyncer {
 
 // 编码器
 func getEncoder() zapcore.EncoderConfig {
-	// 编码
-	encoderConfig := zap.NewProductionEncoderConfig()
-	// 时间格式
-	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	//Level序列化为全大写字符串
-	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
-
-	return encoderConfig
+	// 参考 zap.NewProductionEncoderConfig()
+	return zapcore.EncoderConfig{
+		TimeKey:       "time",
+		LevelKey:      "level",
+		NameKey:       "logger",
+		CallerKey:     "caller",
+		MessageKey:    "msg",
+		StacktraceKey: "stacktrace",
+		LineEnding:    zapcore.DefaultLineEnding,
+		EncodeLevel:   zapcore.CapitalLevelEncoder,//Level序列化为全大写字符串
+		EncodeTime: zapcore.ISO8601TimeEncoder, // 时间格式
+		EncodeDuration: zapcore.MillisDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder, // 全路径编码器
+	}
 }
