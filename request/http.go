@@ -25,7 +25,7 @@ import (
  */
 
 type HttpRequest struct {
-	span         *opentracing.Span
+	span         opentracing.Span
 	url          string
 	method       string
 	async        bool
@@ -73,7 +73,7 @@ func NewHttpRequest(url string) *HttpRequest {
 }
 
 // SetTracing 设置追踪
-func (req *HttpRequest) SetTracing(span *opentracing.Span) *HttpRequest {
+func (req *HttpRequest) SetTracing(span opentracing.Span) *HttpRequest {
 	req.span = span
 	return req
 }
@@ -231,7 +231,7 @@ func (req *HttpRequest) doRequest() ([]byte, error) {
 	//Inject Header
 	if req.span != nil {
 		err := opentracing.GlobalTracer().Inject(
-			(*req.span).Context(),
+			req.span.Context(),
 			opentracing.HTTPHeaders,
 			opentracing.HTTPHeadersCarrier(request.Header))
 		if err != nil {
@@ -252,19 +252,19 @@ func (req *HttpRequest) doRequest() ([]byte, error) {
 	if err != nil {
 		//当发生错误时记录详情的请求信息
 		if req.span != nil {
-			(*req.span).SetTag("curl.error", err)
-			(*req.span).SetTag("curl.url", request.URL.RawQuery)
-			(*req.span).SetTag("curl.params", req.formBody)
+			req.span.SetTag("curl.error", err)
+			req.span.SetTag("curl.url", request.URL.RawQuery)
+			req.span.SetTag("curl.params", req.formBody)
 		}
 		return []byte(""), err
 	}
 	if resp.StatusCode != http.StatusOK {
 		//当发生错误时记录详情的请求信息
 		if req.span != nil {
-			(*req.span).SetTag("curl.error", err)
-			(*req.span).SetTag("curl.url", request.URL.RawQuery)
-			(*req.span).SetTag("curl.params", req.formBody)
-			(*req.span).SetTag("status.code", resp.Status)
+			req.span.SetTag("curl.error", err)
+			req.span.SetTag("curl.url", request.URL.RawQuery)
+			req.span.SetTag("curl.params", req.formBody)
+			req.span.SetTag("status.code", resp.Status)
 		}
 	}
 
