@@ -11,9 +11,9 @@ import (
 func TestRequestGet(t *testing.T) {
 	url := "http://localhost:8080/frontend/v1/health"
 	queries := map[string]string{
-		"t":"1622394061000",
-		"p":"iOS",
-		"v":"1.0.0",
+		"t": "1622394061000",
+		"p": "iOS",
+		"v": "1.0.0",
 	}
 	errRes, err := NewHttpRequest(url).
 		SetMethod(http.MethodGet).
@@ -28,9 +28,9 @@ func TestRequestGet(t *testing.T) {
 func TestRequestGet2(t *testing.T) {
 	url := "http://localhost:8080/frontend/v1/health"
 	queries := map[string]string{
-		"t":"1622394061000",
-		"p":"iOS",
-		"v":"1.0.0",
+		"t": "1622394061000",
+		"p": "iOS",
+		"v": "1.0.0",
 	}
 	// 直接获取data的数据指针
 	type testBack struct {
@@ -45,15 +45,15 @@ func TestRequestGet2(t *testing.T) {
 }
 
 // 测试post请求（同步）
-func TestRequestPOST(t *testing.T)  {
+func TestRequestPOST(t *testing.T) {
 	url := "http://127.0.0.1:8080/frontend/v1/user.login"
 	queries := map[string]string{
-		"t":"1622394061000",
-		"p":"iOS",
-		"v":"1.0.0",
+		"t": "1622394061000",
+		"p": "iOS",
+		"v": "1.0.0",
 	}
 	formData := map[string]interface{}{
-		"username":  "123uwrr",
+		"username": "123uwrr",
 		"password": "1234567a",
 	}
 	result, err := NewHttpRequest(url).
@@ -67,12 +67,12 @@ func TestRequestPOST(t *testing.T)  {
 }
 
 // 测试post请求（异步）
-func TestRequestPOST3(t *testing.T)  {
+func TestRequestPOST3(t *testing.T) {
 	InitAsyncPool(10)
 	url := "http://127.0.0.1:8080/frontend/v1/user.register"
 	formData := map[string]interface{}{
-		"username":"wei3351",
-		"password":"1234567a",
+		"username": "wei3351",
+		"password": "1234567a",
 	}
 	// 只获取success与否 - 返回true/false
 	result, err := NewHttpRequest(url).
@@ -88,9 +88,8 @@ func TestRequestPOST3(t *testing.T)  {
 	time.Sleep(3 * time.Second)
 }
 
-
 // 测试本地文件上传（同步）
-func TestRequestFileUpload(t *testing.T){
+func TestRequestFileUpload(t *testing.T) {
 
 }
 

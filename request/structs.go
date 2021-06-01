@@ -9,13 +9,13 @@ package request
 
 type (
 	HttpResponse struct {
-		Success bool        `json:"success"`
-		Data    interface{} `json:"data"`
-		Error    `json:"error"`
+		Success bool         `json:"success"`
+		Data    interface{}  `json:"data"`
+		Error   ErrorMessage `json:"error"`
 	}
 
-	Error struct {
-		Code    interface{} `json:"code"`
-		Message string      `json:"message"`
+	ErrorMessage struct {
+		Code    string `json:"code"`
+		Message string `json:"message"`
 	}
 )
